@@ -40,6 +40,7 @@
     <div class="input-group w-75 w-md-50">
       <input type="text" id="searchInput" class="form-control" placeholder="Search for movies...">
       <button class="btn btn-danger" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+      <button class="btn btn-outline-light ms-2" id="surpriseBtn"><i class="fas fa-random"></i> Surprise Me</button>
     </div>
   </header>
 
@@ -50,6 +51,28 @@
       <!-- Movie cards will appear here -->
     </div>
   </section>
+
+  <!-- Surprise Me Modal -->
+  <div class="modal fade" id="surpriseModal" tabindex="-1" aria-labelledby="surpriseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="surpriseModalLabel">Surprise Movie 🎲</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="surpriseContent" class="row g-3 text-center">
+            <div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button id="favSurpriseBtn" class="btn btn-danger">Add to Favorites</button>
+          <a id="viewDetailBtn" href="#" class="btn btn-secondary">View Details</a>
+          <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
