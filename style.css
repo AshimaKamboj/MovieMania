@@ -273,3 +273,20 @@ footer a:hover {
 /* short fade-in (if you use .fade-in on cards) */
 .fade-in { animation: fadeInUp 0.45s ease both; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Trending Section */
+#trendingMovies .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#trendingMovies .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.5);
+}
