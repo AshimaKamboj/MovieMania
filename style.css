@@ -243,3 +243,33 @@ footer a:hover {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* Trending Section */
+#trending h2 {
+  font-weight: bold;
+  color: #ff4757;
+}
+
+.movie-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+/* Surprise modal poster */
+.surprise-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* small visual tweaks for modal loader/content */
+#surpriseContent { min-height: 150px; }
+
+/* short fade-in (if you use .fade-in on cards) */
+.fade-in { animation: fadeInUp 0.45s ease both; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }

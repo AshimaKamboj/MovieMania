@@ -109,3 +109,4 @@ searchInput.addEventListener("keypress", (e) => {
     if (query) fetchMovies(query);
   }
 });
+
