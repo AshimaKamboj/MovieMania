@@ -1,0 +1,245 @@
+/* ===== Global Styles ===== */
+body {
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: #111 !important;
+  padding: 15px 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #ff2e63 !important;
+  letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+  color: #ddd !important;
+  margin: 0 10px;
+  transition: 0.3s;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ff2e63 !important;
+}
+
+/* ===== Search Section ===== */
+#searchInput {
+  border-radius: 25px;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 46, 99, 0.4);
+}
+
+#searchBtn {
+  border-radius: 25px;
+  padding: 10px 20px;
+  background: #ff2e63;
+  border: none;
+  transition: all 0.3s;
+}
+
+#searchBtn:hover {
+  background: #e6004c;
+  transform: scale(1.05);
+}
+
+/* ===== Movie Cards ===== */
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transform: scale(1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.card img {
+  height: 350px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card-text {
+  color: #aaa;
+}
+
+.btn {
+  border-radius: 25px;
+}
+
+.btn-danger {
+  background-color: #ff2e63 !important;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #e6004c !important;
+  transform: translateY(-2px);
+}
+
+/* Favorite Button (heart) */
+.favBtn {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favBtn i {
+  font-size: 18px;
+}
+
+/* ===== Animations ===== */
+.fade-in {
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Footer ===== */
+footer {
+  background: #111;
+  color: #aaa;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer a {
+  color: #ff2e63;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ===== About Page Styling ===== */
+.about-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #141414, #1f1f1f);
+    border-radius: 12px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.about-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff4444;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    color: #dcdcdc;
+    line-height: 1.8;
+}
+
+/* Cards */
+.about-section .card {
+    background: #222;
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 10px;
+}
+
+.about-section .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+.about-section .card-body h5 {
+    color: #ff6666;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.about-section .card-body p {
+    font-size: 0.95rem;
+    color: #bbb;
+}
+
+/* Tech Section */
+.tech-section {
+    padding: 30px;
+    color: #ccc;
+    border-top: 1px solid #333;
+}
+.tech-section h3 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Testimonials */
+.testimonials blockquote {
+    background: #222;
+    border-left: 5px solid #ff4444;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Future Section */
+.future-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+.future-section li {
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #bbb;
+}
+
+/* Footer */
+.footer {
+    background: #111;
+    border-top: 1px solid #333;
+}
+.footer p {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

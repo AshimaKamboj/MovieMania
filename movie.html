@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Movie Details - MovieMania</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark text-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black shadow">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">🎬 MovieMania</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="favorites.html">Favorites</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-5">
+    <div id="movieArea" class="row g-4">
+      <!-- Movie details will be injected here -->
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Reviews -->
+    <section id="reviewsSection" class="mt-4">
+      <h3>Ratings & Reviews</h3>
+
+      <!-- Average rating display -->
+      <div id="avgRating" class="mb-3"></div>
+
+      <!-- Review form -->
+      <div class="card bg-dark text-light mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Leave a review</h5>
+          <div class="mb-2">
+            <label class="form-label">Your Rating</label>
+            <div id="starInput" class="mb-2">
+              <!-- star controls will be injected here -->
+            </div>
+          </div>
+          <div class="mb-2">
+            <label for="reviewText" class="form-label">Comment</label>
+            <textarea id="reviewText" rows="3" class="form-control bg-black text-light" placeholder="Write a short review..."></textarea>
+          </div>
+          <button id="submitReview" class="btn btn-danger">Submit Review</button>
+        </div>
+      </div>
+
+      <!-- Reviews list -->
+      <div id="reviewsList"></div>
+    </section>
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Movie page JS -->
+  <script>
+    // ======= CONFIG =======
+    const apiKey = "2296f008"; // your OMDb key
+    const apiUrl = "https://www.omdbapi.com/";
+
+    // ======= HELPERS =======
+    function qs(name) {
+      const url = new URL(location.href);
+      return url.searchParams.get(name);
+    }
+
+    function getFavorites() {
+      return JSON.parse(localStorage.getItem('favorites') || '[]');
+    }
+    function saveFavorites(arr) {
+      localStorage.setItem('favorites', JSON.stringify(arr));
+    }
+
+    function getReviewsStore() {
+      // stored as object { imdbID: [ {rating, comment, timestamp} ] }
+      return JSON.parse(localStorage.getItem('reviews') || '{}');
+    }
+    function saveReviewsStore(store) {
+      localStorage.setItem('reviews', JSON.stringify(store));
+    }
+
+    // ======= PAGE LOGIC =======
+    const imdbID = qs('id');
+    const movieArea = document.getElementById('movieArea');
+    const avgRatingEl = document.getElementById('avgRating');
+    const reviewsList = document.getElementById('reviewsList');
+    const reviewText = document.getElementById('reviewText');
+    const starInput = document.getElementById('starInput');
+    let selectedRating = 5;
+
+    if (!imdbID) {
+      movieArea.innerHTML = '<p class="text-danger">No movie id provided.</p>';
+      throw new Error('No imdb id in url');
+    }
+
+    async function fetchMovieDetails(id) {
+      movieArea.innerHTML = `<p class="text-center">Loading movie details...</p>`;
+      try {
+        const res = await fetch(`${apiUrl}?i=${id}&apikey=${apiKey}&plot=full`);
+        const data = await res.json();
+
+        if (data.Response === "False") {
+          movieArea.innerHTML = `<p class="text-danger">${data.Error}</p>`;
+          return;
+        }
+
+        renderMovie(data);
+        renderReviews();
+      } catch (err) {
+        console.error(err);
+        movieArea.innerHTML = `<p class="text-danger">Error loading movie.</p>`;
+      }
+    }
+
+    function renderMovie(m) {
+      const isFav = getFavorites().includes(m.imdbID);
+      movieArea.innerHTML = `
+        <div class="col-md-4">
+          <div class="card bg-black text-light h-100 shadow">
+            <img src="${m.Poster !== "N/A" ? m.Poster : 'https://via.placeholder.com/400x600?text=No+Image'}" class="card-img-top" alt="${m.Title}">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <h1 class="fw-bold">${m.Title} <small class="text-muted">(${m.Year})</small></h1>
+          <p class="mb-1"><strong>Genre:</strong> ${m.Genre}</p>
+          <p class="mb-1"><strong>Runtime:</strong> ${m.Runtime}</p>
+          <p class="mb-1"><strong>Director:</strong> ${m.Director}</p>
+          <p class="mb-1"><strong>Actors:</strong> ${m.Actors}</p>
+          <p class="mb-3"><strong>IMDB Rating:</strong> ${m.imdbRating} / 10</p>
+          <p>${m.Plot}</p>
+
+          <div class="d-flex gap-2 mt-3">
+            <button id="favBtn" class="btn ${isFav ? 'btn-outline-danger' : 'btn-danger'}">
+              <i class="fa${isFav ? 's' : 'r'} fa-heart"></i> ${isFav ? 'Remove from Favorites' : 'Add to Favorites'}
+            </button>
+            <a class="btn btn-secondary" href="index.html"><i class="fas fa-arrow-left"></i> Back</a>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('favBtn').addEventListener('click', () => toggleFavorite(m.imdbID));
+    }
+
+    function toggleFavorite(id) {
+      const fav = getFavorites();
+      const idx = fav.indexOf(id);
+      if (idx === -1) {
+        fav.push(id);
+        saveFavorites(fav);
+        alert('Added to Favorites ❤️');
+      } else {
+        fav.splice(idx,1);
+        saveFavorites(fav);
+        alert('Removed from Favorites');
+      }
+      fetchMovieDetails(id); // re-render to update button state
+    }
+
+    // ======= Reviews UI =======
+    function makeStarButtons(container, onSelect, initial = 5) {
+      container.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('i');
+        btn.className = `fa-star fa-lg me-1 star-btn pointer ${i <= initial ? 'fas' : 'far'}`;
+        btn.dataset.value = i;
+        btn.style.cursor = 'pointer';
+        btn.addEventListener('mouseenter', () => highlightStars(container, i));
+        btn.addEventListener('mouseleave', () => highlightStars(container, selectedRating));
+        btn.addEventListener('click', () => {
+          selectedRating = i;
+          highlightStars(container, selectedRating);
+          onSelect && onSelect(selectedRating);
+        });
+        container.appendChild(btn);
+      }
+      highlightStars(container, initial);
+    }
+
+    function highlightStars(container, upto) {
+      const stars = container.querySelectorAll('.star-btn');
+      stars.forEach(s => {
+        s.classList.toggle('fas', Number(s.dataset.value) <= upto);
+        s.classList.toggle('far', Number(s.dataset.value) > upto);
+      });
+    }
+
+    function renderReviews() {
+      const store = getReviewsStore();
+      const list = store[imdbID] || [];
+
+      // average rating
+      const avg = list.length ? (list.reduce((a,b)=>a+b.rating,0) / list.length) : 0;
+      avgRatingEl.innerHTML = avg ? `<strong>Average Rating:</strong> ${avg.toFixed(1)} / 5 &nbsp; ${renderStarsInline(avg)}` : `<em>No ratings yet</em>`;
+
+      // reviews list
+      if (!list.length) {
+        reviewsList.innerHTML = `<p class="text-muted">Be the first to review this movie.</p>`;
+        return;
+      }
+      reviewsList.innerHTML = '';
+      list.slice().reverse().forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'card bg-black text-light mb-3 shadow-sm';
+        card.innerHTML = `
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>${renderStarsInline(r.rating)} <small class="text-muted ms-2">${new Date(r.timestamp).toLocaleString()}</small></div>
+            </div>
+            <p class="mt-2 mb-0">${escapeHtml(r.comment)}</p>
+          </div>
+        `;
+        reviewsList.appendChild(card);
+      });
+    }
+
+    function renderStarsInline(n) {
+      // render up to 5 stars where n can be decimal
+      const full = Math.floor(n);
+      const frac = n - full;
+      let html = '';
+      for (let i = 0; i < full; i++) html += '<i class="fas fa-star text-warning"></i>';
+      if (frac >= 0.5) html += '<i class="fas fa-star-half-alt text-warning"></i>';
+      for (let i = full + (frac >= 0.5 ? 1 : 0); i < 5; i++) html += '<i class="far fa-star text-warning"></i>';
+      return html;
+    }
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return s.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+    }
+
+    // initialize star input
+    makeStarButtons(starInput, (r)=> { selectedRating = r; }, 5);
+
+    document.getElementById('submitReview').addEventListener('click', () => {
+      const comment = reviewText.value.trim();
+      if (!comment) {
+        alert('Please enter a short comment.');
+        return;
+      }
+      const store = getReviewsStore();
+      store[imdbID] = store[imdbID] || [];
+      store[imdbID].push({
+        rating: Number(selectedRating),
+        comment,
+        timestamp: Date.now()
+      });
+      saveReviewsStore(store);
+      reviewText.value = '';
+      selectedRating = 5;
+      makeStarButtons(starInput, null, 5);
+      renderReviews();
+      alert('Thanks! Your review has been saved locally.');
+    });
+
+    // start
+    fetchMovieDetails(imdbID);
+  </script>
+  <footer class="footer bg-dark text-center py-3 mt-5">
+    <p class="mb-0 text-light">© 2025 MovieMania | Made with ❤️ for movie lovers</p>
+  </footer>
+</body>
+</html>
