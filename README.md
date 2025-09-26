@@ -1,4 +1,4 @@
-🎬 MovieMania
+🎬 MovieMania   ( https://movie-mania-jet-sigma.vercel.app/ )
 
 MovieMania is an interactive, user-friendly web application that allows users to search, discover, and review movies. Built using HTML, CSS,
 JavaScript, and Bootstrap, it integrates with the OMDb API to fetch real-time movie data and offers a fully responsive experience.
